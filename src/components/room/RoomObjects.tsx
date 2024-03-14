@@ -40,7 +40,7 @@ export const RoomObjects : React.FC<RoomObjectsProps> = ({objects, enterRoom, co
     }
 
     const getObjectStyle = (object: any) => {
-        const style = {zIndex: object.zindex} as any;
+        const style = {zIndex: object.zIndex} as any;
 
         if(mobile){
             const obj = objectsWithWidth.find((o:any) => o.name == object.name);

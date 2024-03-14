@@ -145,7 +145,7 @@ export const MeetObjectsRoom : React.FC<MeetObjectsRoomType> = ({objects, select
                                 onClick={() => selected?.name === object.name ? setSelected!!(null) : setSelected!!(object)}
                                 src={getImageFromObject(object)}
                                 className={getClassFromObject(object)}
-                                style={{zIndex: object.zindex}}
+                                style={{zIndex: object.zIndex}}
                                 />)
                     }
                 </div>
