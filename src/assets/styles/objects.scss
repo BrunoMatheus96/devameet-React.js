@@ -1,0 +1,353 @@
+@import './configs.scss';
+
+.container-objects {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    .center {
+        display: flex;
+        align-items: flex-start;
+
+        .grid {
+            width: 320px;
+            height: 320px;
+            background-color: white;
+            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14);
+            position: relative;
+
+            .preview {
+                position: absolute;
+                z-index: 100 !important;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+                background-color: $greyColor5WithOpacity;
+
+                img {
+                    width: 68px;
+                    height: 68px;
+                    position: relative;
+                    margin-bottom: 3%;
+                    cursor: auto;
+                }
+
+                button {
+                    width: 60%;
+                    border: 2px solid white;
+                    background-color: transparent;
+                }
+            }
+
+            img {
+                position: absolute;
+
+                &.row-one {
+                    top: 0%;
+                }
+
+                &.row-two {
+                    top: 12.5%;
+                }
+
+                &.row-three {
+                    top: 25%;
+                }
+
+                &.row-four {
+                    top: 37.5%;
+                }
+
+                &.row-five {
+                    top: 50%;
+                }
+
+                &.row-six {
+                    top: 62.5%;
+                }
+
+                &.row-seven {
+                    top: 75%;
+                }
+
+                &.row-eight {
+                    top: 87.5%;
+                }
+
+                &.column-one {
+                    left: 0%;
+                }
+
+                &.column-two {
+                    left: 12.5%;
+                }
+
+                &.column-three {
+                    left: 25%;
+                }
+
+                &.column-four {
+                    left: 37.5%;
+                }
+
+                &.column-five {
+                    left: 50%;
+                }
+
+                &.column-six {
+                    left: 62.5%;
+                }
+
+                &.column-seven {
+                    left: 75%;
+                }
+
+                &.column-eight {
+                    left: 87.5%;
+                }
+            }
+
+            .user-avatar {
+                position: absolute;
+                z-index: 20;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                div {
+                    background-color: $greyColor5;
+                    border: 1.5px solid $primaryColor4;
+                    border-radius: 20px;
+                    margin-bottom: 10px;
+                    padding: 4px 8px;
+
+                    &.muted{
+                        border-color: $muted;
+                    }
+
+                    span {
+                        font-weight: 500;
+                        line-height: 11px;
+                        color: $primaryColor4;
+
+                        &.muted{
+                            color: $muted;
+                        }
+                    }
+                }
+
+                img {
+                    position: relative;
+                }
+
+                &.row-one {
+                    top: -7%;
+                }
+
+                &.row-two {
+                    top: 5%;
+                }
+
+                &.row-three {
+                    top: 17%;
+                }
+
+                &.row-four {
+                    top: 29%;
+                }
+
+                &.row-five {
+                    top: 41%;
+                }
+
+                &.row-six {
+                    top: 53%;
+                }
+
+                &.row-seven {
+                    top: 65%;
+                }
+
+                &.row-eight {
+                    top: 77%;
+                }
+
+                &.column-one {
+                    left: -0.5%;
+                }
+
+                &.column-two {
+                    left: 11.5%;
+                }
+
+                &.column-three {
+                    left: 23.5%;
+                }
+
+                &.column-four {
+                    left: 36%;
+                }
+
+                &.column-five {
+                    left: 48%;
+                }
+
+                &.column-six {
+                    left: 60%;
+                }
+
+                &.column-seven {
+                    left: 73%;
+                }
+
+                &.column-eight {
+                    left: 87%;
+                }
+            }
+
+            .audio{
+                position: absolute;
+                cursor: pointer;
+                top: 88%;
+                left: 88%;
+                z-index: 25;
+                width: 32px;
+            }
+        }
+    }
+
+    @media screen and (min-width: $desktopBreakpoint) {
+        display: flex;
+        flex: 1;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+
+        .center {
+            .grid {
+                width: 640px;
+                height: 640px;
+                background-color: white;
+                box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14);
+                position: relative;
+
+                .preview {
+                    img {
+                        width: 120px;
+                        height: 120px;
+                    }
+
+                    button {
+                        width: 35%;
+
+                    }
+                }
+
+                .line {
+                    position: absolute;
+                    height: 0;
+                    margin: 0;
+
+                    &.row {
+                        width: 100%;
+                        left: 0;
+                        border-bottom: 0.5px solid $primaryColor;
+
+                        &.one {
+                            top: 12.5%;
+                        }
+
+                        &.two {
+                            top: 25%;
+                        }
+
+                        &.three {
+                            top: 37.5%;
+                        }
+
+                        &.four {
+                            top: 50%;
+                        }
+
+                        &.five {
+                            top: 62.5%;
+                        }
+
+                        &.six {
+                            top: 75%;
+                        }
+
+                        &.seven {
+                            top: 87.5%;
+                        }
+                    }
+
+                    &.column {
+                        height: 100%;
+                        top: 0;
+                        border-left: 0.5px solid $primaryColor;
+
+                        &.one {
+                            left: 12.5%;
+                        }
+
+                        &.two {
+                            left: 25%;
+                        }
+
+                        &.three {
+                            left: 37.5%;
+                        }
+
+                        &.four {
+                            left: 50%;
+                        }
+
+                        &.five {
+                            left: 62.5%;
+                        }
+
+                        &.six {
+                            left: 75%;
+                        }
+
+                        &.seven {
+                            left: 87.5%;
+                        }
+                    }
+                }
+
+                .audio{
+                    top: 90%;
+                    left: 90%;
+                    width: 48px;
+                }
+            }
+
+            .actions {
+                margin-left: 16px;
+
+                div {
+                    width: 48px;
+                    height: 48px;
+                    background-color: $greyColor4;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 4px;
+                    margin-bottom: 16px;
+                    cursor: auto;
+
+                    &.active {
+                        cursor: pointer;
+                        background-color: $primaryColor;
+                    }
+                }
+            }
+        }
+    }
+}
