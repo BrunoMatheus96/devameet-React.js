@@ -26,6 +26,7 @@ export const RoomHome = () => {
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [me, setMe] = useState<any>({});
     const [showModal, setShowModal] = useState(false);
+    const [coordinates, setCoordinates] = useState([]);
 
     const { link } = useParams();
     const userId = localStorage.getItem('id') || '';
@@ -53,6 +54,17 @@ export const RoomHome = () => {
             });
 
             setObjects(newObjects);
+
+            //Lógica para verificar quais objetos são do tipo que eu espero e guardar as cordenadas dele adicionando a altura e a largura dos objetos
+            const filteredCoordinates = newObjects
+                .filter((o: any) => o.type === 'table' || o.type === 'decor' || o.type === 'nature')
+                .map((o: any) => {
+                    // Supondo que 'x' e 'y' são as coordenadas x e y do objeto
+                    return { type: o.type, x: o.x, y: o.y, width: o.width, height: o.height };
+                });
+
+            setCoordinates(filteredCoordinates);
+
 
             userMediaStream = await navigator?.mediaDevices?.getUserMedia({
                 video: {
@@ -82,11 +94,11 @@ export const RoomHome = () => {
         return () => {
             document.removeEventListener('keyup', (event: any) => doMovement(event));
         }
-    }, [])
+    }, [coordinates]);
 
 
     const enterRoom = () => {
-        if(!userMediaStream){
+        if (!userMediaStream) {
             return setShowModal(true);
         }
 
@@ -107,9 +119,9 @@ export const RoomHome = () => {
                     localStorage.setItem('me', JSON.stringify(me));
                 }
 
-                const usersWithoutMe = users.filter((u : any) => u.user !== userId);
-                for(const user of usersWithoutMe){
-                    wsServices.addPeerConnection(user.clientId, userMediaStream, (_stream : any) => {
+                const usersWithoutMe = users.filter((u: any) => u.user !== userId);
+                for (const user of usersWithoutMe) {
+                    wsServices.addPeerConnection(user.clientId, userMediaStream, (_stream: any) => {
                         if (document.getElementById(user.clientId)) {
                             const videoRef: any = document.getElementById(user.clientId);
                             videoRef.srcObject = _stream;
@@ -131,7 +143,7 @@ export const RoomHome = () => {
         wsServices.onAddUser((user: any) => {
             console.log('onAddUser', user);
 
-            wsServices.addPeerConnection(user, userMediaStream, (_stream : any) => {
+            wsServices.addPeerConnection(user, userMediaStream, (_stream: any) => {
                 if (document.getElementById(user)) {
                     const videoRef: any = document.getElementById(user);
                     videoRef.srcObject = _stream;
@@ -141,7 +153,7 @@ export const RoomHome = () => {
             wsServices.callUser(user);
         });
 
-        wsServices.onAnswerMade((socket:any) => wsServices.callUser(socket));
+        wsServices.onAnswerMade((socket: any) => wsServices.callUser(socket));
     }
 
     const toggleMute = () => {
@@ -155,6 +167,7 @@ export const RoomHome = () => {
     }
 
     const doMovement = (event: any) => {
+
         const meStr = localStorage.getItem('me') || '';
         const user = JSON.parse(meStr);
 
@@ -204,8 +217,24 @@ export const RoomHome = () => {
                 default: break;
             }
 
+            //Switch gera o payload.x e o payload.y que são as próximas coordenas 
+            //Comparar as coordenadas do payload com as coordenadas que salvei e se elas forem iguais em algum caso o payload.x e payload.y devem ser igual a user.x a user.y
+            // Se a próxima posição não estiver bloqueada, atualize o movimento do avatar
+
+            const collision = coordinates.find((coord: any) => coord.x === payload.x && coord.y === payload.y && (coord.type === 'table' || coord.type === 'decor' || coord.type === 'nature'));
+
+            // Se houver colisão, manter as coordenadas atuais do usuário
+            if (collision) {
+                payload.x = user.x
+                payload.y = user.y
+            }
+
+            console.log("Próximo passo", collision);
+            console.log("Payload X", payload.x);
+            console.log("Payload Y", payload.y);
+
             if (payload.x >= 0 && payload.y >= 0 && payload.orientation) {
-                wsServices.updateUserMovement(payload);
+               wsServices.updateUserMovement(payload);
             }
         }
     }
@@ -215,7 +244,7 @@ export const RoomHome = () => {
     }
 
     const getUsersWithoutMe = () => {
-        return connectedUsers.filter((u : any) => u.user !== userId);
+        return connectedUsers.filter((u: any) => u.user !== userId);
     }
 
     return (
@@ -236,7 +265,7 @@ export const RoomHome = () => {
                                     <audio id='localVideoRef' playsInline autoPlay muted />
                                     {getUsersWithoutMe()?.map((user: any) =>
                                         <audio key={user.clientId} id={user.clientId}
-                                            playsInline autoPlay muted={user?.muted}/>
+                                            playsInline autoPlay muted={user?.muted} />
                                     )}
                                 </div>
                                 <RoomObjects
