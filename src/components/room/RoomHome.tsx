@@ -60,8 +60,11 @@ export const RoomHome = () => {
                 .filter((o: any) => o.type === 'table' || o.type === 'decor' || o.type === 'nature')
                 .map((o: any) => {
                     // Supondo que 'x' e 'y' são as coordenadas x e y do objeto
-                    return { type: o.type, x: o.x, y: o.y, width: o.width, height: o.height };
+                    return { type: o.type, name: o.name, id: o._id, x: o.x, y: o.y, width: o.width, height: o.height };
                 });
+
+            console.log("Mapeamento", newObjects)
+
 
             setCoordinates(filteredCoordinates);
 
@@ -89,10 +92,12 @@ export const RoomHome = () => {
     }, [])
 
     useEffect(() => {
-        document.addEventListener('keyup', (event: any) => doMovement(event));
+        const handleMovement = (event: any) => doMovement(event); // Função para lidar com o evento de movimento
+
+        document.addEventListener('keyup', handleMovement); // Adiciona o listener
 
         return () => {
-            document.removeEventListener('keyup', (event: any) => doMovement(event));
+            document.removeEventListener('keyup', handleMovement); // Remove o listener ao desmontar o componente
         }
     }, [coordinates]);
 
@@ -220,21 +225,18 @@ export const RoomHome = () => {
             //Switch gera o payload.x e o payload.y que são as próximas coordenas 
             //Comparar as coordenadas do payload com as coordenadas que salvei e se elas forem iguais em algum caso o payload.x e payload.y devem ser igual a user.x a user.y
             // Se a próxima posição não estiver bloqueada, atualize o movimento do avatar
-
+            // Verificar colisões
             const collision = coordinates.find((coord: any) => coord.x === payload.x && coord.y === payload.y && (coord.type === 'table' || coord.type === 'decor' || coord.type === 'nature'));
 
             // Se houver colisão, manter as coordenadas atuais do usuário
             if (collision) {
-                payload.x = user.x
-                payload.y = user.y
+                console.log("Colisão", collision);
+                payload.x = user.x;
+                payload.y = user.y;
             }
 
-            console.log("Próximo passo", collision);
-            console.log("Payload X", payload.x);
-            console.log("Payload Y", payload.y);
-
             if (payload.x >= 0 && payload.y >= 0 && payload.orientation) {
-               wsServices.updateUserMovement(payload);
+                wsServices.updateUserMovement(payload);
             }
         }
     }
