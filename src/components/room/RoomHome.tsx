@@ -59,14 +59,23 @@ export const RoomHome = () => {
             const filteredCoordinates = newObjects
                 .filter((o: any) => o.type === 'table' || o.type === 'decor' || o.type === 'nature')
                 .map((o: any) => {
-                    // Supondo que 'x' e 'y' são as coordenadas x e y do objeto
-                    return { type: o.type, name: o.name, id: o._id, x: o.x, y: o.y, width: o.width, height: o.height };
+                    if (o.type === 'table' && ['table_01', 'table_02', 'table_03'].includes(o.name)) {
+                        const nextCoordinates = [];
+                        for (let x = o.x; x < o.x + 2; x++) {
+                            for (let y = o.y; y < o.y + 2; y++) {
+                                nextCoordinates.push({ x, y });
+                            }
+                        }
+                        // Supondo que 'x' e 'y' são as coordenadas x e y do objeto
+                        return { type: o.type, name: o.name, id: o._id, x: o.x, y: o.y, nextCoordinates };
+                    } else {
+                        // Se não for uma mesa com os nomes específicos, retornamos suas coordenadas existentes sem calcular novas coordenadas
+                        return { type: o.type, name: o.name, id: o._id, x: o.x, y: o.y, nextCoordinates: [] };
+                    }
                 });
 
-            console.log("Mapeamento", newObjects)
-
-
             setCoordinates(filteredCoordinates);
+            console.log(filteredCoordinates);
 
 
             userMediaStream = await navigator?.mediaDevices?.getUserMedia({
@@ -226,7 +235,13 @@ export const RoomHome = () => {
             //Comparar as coordenadas do payload com as coordenadas que salvei e se elas forem iguais em algum caso o payload.x e payload.y devem ser igual a user.x a user.y
             // Se a próxima posição não estiver bloqueada, atualize o movimento do avatar
             // Verificar colisões
-            const collision = coordinates.find((coord: any) => coord.x === payload.x && coord.y === payload.y && (coord.type === 'table' || coord.type === 'decor' || coord.type === 'nature'));
+            const collision = coordinates.find((coord: any) => {
+                if (Array.isArray(coord.nextCoordinates) && coord.nextCoordinates.length > 0) {
+                    return coord.nextCoordinates.some((nextCoord: any) => nextCoord.x === payload.x && nextCoord.y === payload.y);
+                } else {
+                    return coord.x === payload.x && coord.y === payload.y && (coord.type === 'table' || coord.type === 'decor' || coord.type === 'nature');
+                }
+            });
 
             // Se houver colisão, manter as coordenadas atuais do usuário
             if (collision) {
